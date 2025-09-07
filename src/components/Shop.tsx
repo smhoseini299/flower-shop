@@ -1,16 +1,8 @@
 import React, { useState } from 'react';
 import { 
   Search, 
-  ShoppingCart, 
   Heart, 
   Star, 
-  Leaf, 
-  Phone, 
-  Mail, 
-  MapPin,
-  User,
-  Menu,
-  X,
   Filter,
   ChevronDown,
   Truck,
@@ -19,6 +11,7 @@ import {
   Award
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useCart } from '../contexts/CartContext';
 
 interface Product {
   id: number;
@@ -38,10 +31,11 @@ interface Product {
 const Shop: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('همه محصولات');
-  const [cartItems, setCartItems] = useState<number[]>([]);
   const [wishlistItems, setWishlistItems] = useState<number[]>([]);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
+
+  const { addToCart } = useCart();
 
   const categories = [
     'همه محصولات',
@@ -156,8 +150,15 @@ const Shop: React.FC = () => {
     return matchesSearch && matchesCategory;
   });
 
-  const addToCart = (productId: number) => {
-    setCartItems(prev => [...prev, productId]);
+  const handleAddToCart = (product: Product) => {
+    if (product.inStock) {
+      addToCart({
+        id: product.id,
+        name: product.name,
+        price: product.price,
+        image: product.image
+      });
+    }
   };
 
   const toggleWishlist = (productId: number) => {
@@ -171,44 +172,44 @@ const Shop: React.FC = () => {
   const ProductCard = ({ product }: { product: Product }) => (
     <div className="bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden group">
       <Link to={`/product/${product.id}`}>
-      <div className="relative overflow-hidden">
-        <img
-          src={product.image}
-          alt={product.name}
-          className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
-        />
-        <div className="absolute top-3 right-3 flex flex-col gap-2">
-          {product.isNew && (
-            <span className="bg-green-500 text-white px-2 py-1 text-xs rounded-full">
-              جدید
-            </span>
-          )}
-          {product.isOnSale && (
-            <span className="bg-red-500 text-white px-2 py-1 text-xs rounded-full">
-              تخفیف
-            </span>
-          )}
-          {!product.inStock && (
-            <span className="bg-gray-500 text-white px-2 py-1 text-xs rounded-full">
-              ناموجود
-            </span>
-          )}
-        </div>
+        <div className="relative overflow-hidden">
+          <img
+            src={product.image}
+            alt={product.name}
+            className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+          />
+          <div className="absolute top-3 right-3 flex flex-col gap-2">
+            {product.isNew && (
+              <span className="bg-green-500 text-white px-2 py-1 text-xs rounded-full">
+                جدید
+              </span>
+            )}
+            {product.isOnSale && (
+              <span className="bg-red-500 text-white px-2 py-1 text-xs rounded-full">
+                تخفیف
+              </span>
+            )}
+            {!product.inStock && (
+              <span className="bg-gray-500 text-white px-2 py-1 text-xs rounded-full">
+                ناموجود
+              </span>
+            )}
+          </div>
         </div>
       </Link>
-        <button
-          onClick={() => toggleWishlist(product.id)}
-          className="absolute top-3 left-3 p-2 bg-white rounded-full shadow-md hover:bg-red-50 transition-colors"
-        >
-          <Heart 
-            className={`w-4 h-4 ${wishlistItems.includes(product.id) ? 'text-red-500 fill-current' : 'text-gray-400'}`} 
-          />
-        </button>
+      <button
+        onClick={() => toggleWishlist(product.id)}
+        className="absolute top-3 left-3 p-2 bg-white rounded-full shadow-md hover:bg-red-50 transition-colors"
+      >
+        <Heart 
+          className={`w-4 h-4 ${wishlistItems.includes(product.id) ? 'text-red-500 fill-current' : 'text-gray-400'}`} 
+        />
+      </button>
       
       <div className="p-4">
         <Link to={`/product/${product.id}`}>
-        <h3 className="font-semibold text-gray-800 mb-2 line-clamp-1">{product.name}</h3>
-        <p className="text-sm text-gray-600 mb-3 line-clamp-2">{product.description}</p>
+          <h3 className="font-semibold text-gray-800 mb-2 line-clamp-1">{product.name}</h3>
+          <p className="text-sm text-gray-600 mb-3 line-clamp-2">{product.description}</p>
         </Link>
         
         <div className="flex items-center mb-3">
@@ -237,7 +238,7 @@ const Shop: React.FC = () => {
         </div>
         
         <button
-          onClick={() => addToCart(product.id)}
+          onClick={() => handleAddToCart(product)}
           disabled={!product.inStock}
           className={`w-full py-2 px-4 rounded-lg font-medium transition-colors ${
             product.inStock
@@ -253,66 +254,6 @@ const Shop: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <header className="bg-white shadow-sm sticky top-0 z-40">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            {/* Logo */}
-            <div className="flex items-center">
-              <div className="bg-primary-500 p-2 rounded-lg ml-3">
-                <Leaf className="w-6 h-6 text-white" />
-              </div>
-              <h1 className="text-xl font-bold text-gray-800">گل سرای آنلاین</h1>
-            </div>
-
-            {/* Desktop Navigation */}
-            <nav className="hidden md:flex items-center space-x-8 space-x-reverse">
-              <Link to="/" className="text-gray-700 hover:text-primary-600">صفحه اصلی</Link>
-              <a href="#products" className="text-gray-700 hover:text-primary-600">محصولات</a>
-              <Link to="/about" className="text-gray-700 hover:text-primary-600">درباره ما</Link>
-              <Link to="/contact" className="text-gray-700 hover:text-primary-600">تماس با ما</Link>
-            </nav>
-
-            {/* Actions */}
-            <div className="flex items-center gap-4">
-              <button className="relative p-2 text-gray-600 hover:text-primary-600">
-                <ShoppingCart className="w-6 h-6" />
-                {cartItems.length > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                    {cartItems.length}
-                  </span>
-                )}
-              </button>
-              <Link 
-                to="/login"
-                className="p-2 text-gray-600 hover:text-primary-600"
-              >
-                <User className="w-6 h-6" />
-              </Link>
-              <button
-                onClick={() => setIsMenuOpen(!isMenuOpen)}
-                className="md:hidden p-2 text-gray-600"
-              >
-                {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* Mobile Menu */}
-        {isMenuOpen && (
-          <div className="md:hidden bg-white border-t">
-            <div className="px-4 py-2 space-y-2">
-              <Link to="/" className="block py-2 text-gray-700">صفحه اصلی</Link>
-              <a href="#products" className="block py-2 text-gray-700">محصولات</a>
-              <Link to="/about" className="block py-2 text-gray-700">درباره ما</Link>
-              <Link to="/contact" className="block py-2 text-gray-700">تماس با ما</Link>
-              <Link to="/login" className="block py-2 text-gray-700">ورود مدیریت</Link>
-            </div>
-          </div>
-        )}
-      </header>
-
       {/* Hero Section */}
       <section className="relative bg-gradient-to-l from-primary-600 to-primary-800 text-white py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -485,80 +426,6 @@ const Shop: React.FC = () => {
           </div>
         </div>
       </section>
-
-      {/* Footer */}
-      <footer className="bg-gray-800 text-white py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <div>
-              <div className="flex items-center mb-4">
-                <div className="bg-primary-500 p-2 rounded-lg ml-3">
-                  <Leaf className="w-6 h-6 text-white" />
-                </div>
-                <h3 className="text-xl font-bold">گل سرای آنلاین</h3>
-              </div>
-              <p className="text-gray-300 mb-4">
-                ارائه‌دهنده بهترین گل‌ها و گیاهان طبیعی با کیفیت بالا و خدمات عالی
-              </p>
-              <div className="flex gap-4">
-                <div className="w-8 h-8 bg-gray-700 rounded-full flex items-center justify-center hover:bg-primary-600 cursor-pointer transition-colors">
-                  <span className="text-sm">ت</span>
-                </div>
-                <div className="w-8 h-8 bg-gray-700 rounded-full flex items-center justify-center hover:bg-primary-600 cursor-pointer transition-colors">
-                  <span className="text-sm">ا</span>
-                </div>
-                <div className="w-8 h-8 bg-gray-700 rounded-full flex items-center justify-center hover:bg-primary-600 cursor-pointer transition-colors">
-                  <span className="text-sm">و</span>
-                </div>
-              </div>
-            </div>
-
-            <div>
-              <h4 className="text-lg font-semibold mb-4">لینک‌های مفید</h4>
-              <ul className="space-y-2">
-                <li><Link to="/about" className="text-gray-300 hover:text-white">درباره ما</Link></li>
-                <li><a href="#products" className="text-gray-300 hover:text-white">محصولات</a></li>
-                <li><Link to="/contact" className="text-gray-300 hover:text-white">مشاوره</Link></li>
-                <li><a href="#" className="text-gray-300 hover:text-white">بلاگ</a></li>
-              </ul>
-            </div>
-
-            <div>
-              <h4 className="text-lg font-semibold mb-4">خدمات مشتریان</h4>
-              <ul className="space-y-2">
-                <li><a href="#" className="text-gray-300 hover:text-white">راهنمای خرید</a></li>
-                <li><a href="#" className="text-gray-300 hover:text-white">شرایط و قوانین</a></li>
-                <li><a href="#" className="text-gray-300 hover:text-white">حریم خصوصی</a></li>
-                <li><Link to="/contact" className="text-gray-300 hover:text-white">پشتیبانی</Link></li>
-              </ul>
-            </div>
-
-            <div>
-              <h4 className="text-lg font-semibold mb-4">تماس با ما</h4>
-              <div className="space-y-3">
-                <div className="flex items-center">
-                  <Phone className="w-5 h-5 ml-3 text-primary-400" />
-                  <span className="text-gray-300">۰۲۱-۱۲۳۴۵۶۷۸</span>
-                </div>
-                <div className="flex items-center">
-                  <Mail className="w-5 h-5 ml-3 text-primary-400" />
-                  <span className="text-gray-300">info@flowershop.ir</span>
-                </div>
-                <div className="flex items-center">
-                  <MapPin className="w-5 h-5 ml-3 text-primary-400" />
-                  <span className="text-gray-300">تهران، خیابان ولیعصر</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="border-t border-gray-700 mt-8 pt-8 text-center">
-            <p className="text-gray-300">
-              © ۱۴۰۳ گل سرای آنلاین. تمامی حقوق محفوظ است.
-            </p>
-          </div>
-        </div>
-      </footer>
     </div>
   );
 };
