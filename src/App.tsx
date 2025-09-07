@@ -3,6 +3,9 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import Login from './components/Login';
 import Dashboard from './components/Dashboard';
 import Shop from './components/Shop';
+import ProductDetail from './components/ProductDetail';
+import About from './components/About';
+import Contact from './components/Contact';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -21,6 +24,9 @@ function App() {
     <div className="App">
       <Routes>
         <Route path="/" element={<Shop />} />
+        <Route path="/product/:productId" element={<ProductDetail />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/contact" element={<Contact />} />
         <Route
           path="/login"
           element={

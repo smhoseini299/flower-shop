@@ -170,6 +170,7 @@ const Shop: React.FC = () => {
 
   const ProductCard = ({ product }: { product: Product }) => (
     <div className="bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden group">
+      <Link to={`/product/${product.id}`}>
       <div className="relative overflow-hidden">
         <img
           src={product.image}
@@ -193,6 +194,8 @@ const Shop: React.FC = () => {
             </span>
           )}
         </div>
+        </div>
+      </Link>
         <button
           onClick={() => toggleWishlist(product.id)}
           className="absolute top-3 left-3 p-2 bg-white rounded-full shadow-md hover:bg-red-50 transition-colors"
@@ -201,11 +204,12 @@ const Shop: React.FC = () => {
             className={`w-4 h-4 ${wishlistItems.includes(product.id) ? 'text-red-500 fill-current' : 'text-gray-400'}`} 
           />
         </button>
-      </div>
       
       <div className="p-4">
+        <Link to={`/product/${product.id}`}>
         <h3 className="font-semibold text-gray-800 mb-2 line-clamp-1">{product.name}</h3>
         <p className="text-sm text-gray-600 mb-3 line-clamp-2">{product.description}</p>
+        </Link>
         
         <div className="flex items-center mb-3">
           <div className="flex items-center">
@@ -265,8 +269,8 @@ const Shop: React.FC = () => {
             <nav className="hidden md:flex items-center space-x-8 space-x-reverse">
               <Link to="/" className="text-gray-700 hover:text-primary-600">صفحه اصلی</Link>
               <a href="#products" className="text-gray-700 hover:text-primary-600">محصولات</a>
-              <a href="#contact" className="text-gray-700 hover:text-primary-600">درباره ما</a>
-              <a href="#contact" className="text-gray-700 hover:text-primary-600">تماس با ما</a>
+              <Link to="/about" className="text-gray-700 hover:text-primary-600">درباره ما</Link>
+              <Link to="/contact" className="text-gray-700 hover:text-primary-600">تماس با ما</Link>
             </nav>
 
             {/* Actions */}
@@ -301,8 +305,8 @@ const Shop: React.FC = () => {
             <div className="px-4 py-2 space-y-2">
               <Link to="/" className="block py-2 text-gray-700">صفحه اصلی</Link>
               <a href="#products" className="block py-2 text-gray-700">محصولات</a>
-              <a href="#contact" className="block py-2 text-gray-700">درباره ما</a>
-              <a href="#contact" className="block py-2 text-gray-700">تماس با ما</a>
+              <Link to="/about" className="block py-2 text-gray-700">درباره ما</Link>
+              <Link to="/contact" className="block py-2 text-gray-700">تماس با ما</Link>
               <Link to="/login" className="block py-2 text-gray-700">ورود مدیریت</Link>
             </div>
           </div>
@@ -512,20 +516,20 @@ const Shop: React.FC = () => {
             <div>
               <h4 className="text-lg font-semibold mb-4">لینک‌های مفید</h4>
               <ul className="space-y-2">
-                <li><a href="#contact" className="text-gray-300 hover:text-white">درباره ما</a></li>
+                <li><Link to="/about" className="text-gray-300 hover:text-white">درباره ما</Link></li>
                 <li><a href="#products" className="text-gray-300 hover:text-white">محصولات</a></li>
-                <li><a href="#contact" className="text-gray-300 hover:text-white">مشاوره</a></li>
-                <li><a href="#contact" className="text-gray-300 hover:text-white">بلاگ</a></li>
+                <li><Link to="/contact" className="text-gray-300 hover:text-white">مشاوره</Link></li>
+                <li><a href="#" className="text-gray-300 hover:text-white">بلاگ</a></li>
               </ul>
             </div>
 
             <div>
               <h4 className="text-lg font-semibold mb-4">خدمات مشتریان</h4>
               <ul className="space-y-2">
-                <li><a href="#contact" className="text-gray-300 hover:text-white">راهنمای خرید</a></li>
-                <li><a href="#contact" className="text-gray-300 hover:text-white">شرایط و قوانین</a></li>
-                <li><a href="#contact" className="text-gray-300 hover:text-white">حریم خصوصی</a></li>
-                <li><a href="#contact" className="text-gray-300 hover:text-white">پشتیبانی</a></li>
+                <li><a href="#" className="text-gray-300 hover:text-white">راهنمای خرید</a></li>
+                <li><a href="#" className="text-gray-300 hover:text-white">شرایط و قوانین</a></li>
+                <li><a href="#" className="text-gray-300 hover:text-white">حریم خصوصی</a></li>
+                <li><Link to="/contact" className="text-gray-300 hover:text-white">پشتیبانی</Link></li>
               </ul>
             </div>
 
