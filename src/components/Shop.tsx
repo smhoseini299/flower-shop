@@ -18,6 +18,7 @@ import {
   RefreshCw,
   Award
 } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 interface Product {
   id: number;
@@ -34,11 +35,7 @@ interface Product {
   inStock: boolean;
 }
 
-interface ShopProps {
-  onAdminLogin: () => void;
-}
-
-const Shop: React.FC<ShopProps> = ({ onAdminLogin }) => {
+const Shop: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('همه محصولات');
   const [cartItems, setCartItems] = useState<number[]>([]);
@@ -266,10 +263,10 @@ const Shop: React.FC<ShopProps> = ({ onAdminLogin }) => {
 
             {/* Desktop Navigation */}
             <nav className="hidden md:flex items-center space-x-8 space-x-reverse">
-              <a href="#" className="text-gray-700 hover:text-primary-600">صفحه اصلی</a>
-              <a href="#" className="text-gray-700 hover:text-primary-600">محصولات</a>
-              <a href="#" className="text-gray-700 hover:text-primary-600">درباره ما</a>
-              <a href="#" className="text-gray-700 hover:text-primary-600">تماس با ما</a>
+              <Link to="/" className="text-gray-700 hover:text-primary-600">صفحه اصلی</Link>
+              <a href="#products" className="text-gray-700 hover:text-primary-600">محصولات</a>
+              <a href="#contact" className="text-gray-700 hover:text-primary-600">درباره ما</a>
+              <a href="#contact" className="text-gray-700 hover:text-primary-600">تماس با ما</a>
             </nav>
 
             {/* Actions */}
@@ -282,12 +279,12 @@ const Shop: React.FC<ShopProps> = ({ onAdminLogin }) => {
                   </span>
                 )}
               </button>
-              <button 
-                onClick={onAdminLogin}
+              <Link 
+                to="/login"
                 className="p-2 text-gray-600 hover:text-primary-600"
               >
                 <User className="w-6 h-6" />
-              </button>
+              </Link>
               <button
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
                 className="md:hidden p-2 text-gray-600"
@@ -302,10 +299,11 @@ const Shop: React.FC<ShopProps> = ({ onAdminLogin }) => {
         {isMenuOpen && (
           <div className="md:hidden bg-white border-t">
             <div className="px-4 py-2 space-y-2">
-              <a href="#" className="block py-2 text-gray-700">صفحه اصلی</a>
-              <a href="#" className="block py-2 text-gray-700">محصولات</a>
-              <a href="#" className="block py-2 text-gray-700">درباره ما</a>
-              <a href="#" className="block py-2 text-gray-700">تماس با ما</a>
+              <Link to="/" className="block py-2 text-gray-700">صفحه اصلی</Link>
+              <a href="#products" className="block py-2 text-gray-700">محصولات</a>
+              <a href="#contact" className="block py-2 text-gray-700">درباره ما</a>
+              <a href="#contact" className="block py-2 text-gray-700">تماس با ما</a>
+              <Link to="/login" className="block py-2 text-gray-700">ورود مدیریت</Link>
             </div>
           </div>
         )}
@@ -323,12 +321,12 @@ const Shop: React.FC<ShopProps> = ({ onAdminLogin }) => {
                 مجموعه‌ای منحصر به فرد از گل‌ها و گیاهان طبیعی با کیفیت بالا و قیمت مناسب
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
-                <button className="bg-white text-primary-600 px-8 py-3 rounded-lg font-semibold hover:bg-primary-50 transition-colors">
+                <a href="#products" className="bg-white text-primary-600 px-8 py-3 rounded-lg font-semibold hover:bg-primary-50 transition-colors">
                   مشاهده محصولات
-                </button>
-                <button className="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-primary-600 transition-colors">
+                </a>
+                <a href="#contact" className="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-primary-600 transition-colors">
                   مشاوره رایگان
-                </button>
+                </a>
               </div>
             </div>
             <div className="relative">
@@ -437,7 +435,7 @@ const Shop: React.FC<ShopProps> = ({ onAdminLogin }) => {
       </section>
 
       {/* Products */}
-      <section className="py-12">
+      <section id="products" className="py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-gray-800 mb-4">محصولات پیشنهادی</h2>
@@ -465,7 +463,7 @@ const Shop: React.FC<ShopProps> = ({ onAdminLogin }) => {
       </section>
 
       {/* Newsletter */}
-      <section className="py-16 bg-primary-600">
+      <section className="py-16 bg-primary-600" id="contact">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl font-bold text-white mb-4">عضویت در خبرنامه</h2>
           <p className="text-primary-100 mb-8 max-w-2xl mx-auto">
@@ -514,20 +512,20 @@ const Shop: React.FC<ShopProps> = ({ onAdminLogin }) => {
             <div>
               <h4 className="text-lg font-semibold mb-4">لینک‌های مفید</h4>
               <ul className="space-y-2">
-                <li><a href="#" className="text-gray-300 hover:text-white">درباره ما</a></li>
-                <li><a href="#" className="text-gray-300 hover:text-white">محصولات</a></li>
-                <li><a href="#" className="text-gray-300 hover:text-white">مشاوره</a></li>
-                <li><a href="#" className="text-gray-300 hover:text-white">بلاگ</a></li>
+                <li><a href="#contact" className="text-gray-300 hover:text-white">درباره ما</a></li>
+                <li><a href="#products" className="text-gray-300 hover:text-white">محصولات</a></li>
+                <li><a href="#contact" className="text-gray-300 hover:text-white">مشاوره</a></li>
+                <li><a href="#contact" className="text-gray-300 hover:text-white">بلاگ</a></li>
               </ul>
             </div>
 
             <div>
               <h4 className="text-lg font-semibold mb-4">خدمات مشتریان</h4>
               <ul className="space-y-2">
-                <li><a href="#" className="text-gray-300 hover:text-white">راهنمای خرید</a></li>
-                <li><a href="#" className="text-gray-300 hover:text-white">شرایط و قوانین</a></li>
-                <li><a href="#" className="text-gray-300 hover:text-white">حریم خصوصی</a></li>
-                <li><a href="#" className="text-gray-300 hover:text-white">پشتیبانی</a></li>
+                <li><a href="#contact" className="text-gray-300 hover:text-white">راهنمای خرید</a></li>
+                <li><a href="#contact" className="text-gray-300 hover:text-white">شرایط و قوانین</a></li>
+                <li><a href="#contact" className="text-gray-300 hover:text-white">حریم خصوصی</a></li>
+                <li><a href="#contact" className="text-gray-300 hover:text-white">پشتیبانی</a></li>
               </ul>
             </div>
 
